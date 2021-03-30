@@ -66,7 +66,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameElements\AI\RandomAI.cs" />
+    <Compile Include="GameElements\HumanPlayer.cs" />
     <Compile Include="GameElements\Input.cs" />
+    <Compile Include="GameElements\IPlayer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
