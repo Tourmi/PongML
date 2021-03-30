@@ -17,9 +17,13 @@ namespace PongML.Models
 
         public Game()
         {
+            ais = new List<IArtificialIntelligence>();
             players = new IPlayer[2];
+
             players[0] = new HumanPlayer(Key.W, Key.S);
-            players[1] = new RandomAI();
+            IArtificialIntelligence ai = new RandomAI();
+            players[1] = ai;
+            ais.Add(ai);
         }
 
         public void Update()
