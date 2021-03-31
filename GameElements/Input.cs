@@ -16,8 +16,8 @@ namespace PongML.GameElements
     public class Input
     {
         public Direction Direction { get; set; }
-        private double intensity;
-        public double Intensity
+        private float intensity;
+        public float Intensity
         {
             get => intensity; set
             {

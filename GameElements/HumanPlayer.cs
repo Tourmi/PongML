@@ -18,6 +18,9 @@ namespace PongML.GameElements
             this.downKey = downKey;
         }
 
+        public float PaddlePosition { get; set; }
+        public int Score { get; set; }
+
         public Input GetInput()
         {
             Input input = new Input() { Direction = Direction.None, Intensity = 1};

@@ -9,6 +9,16 @@ namespace PongML.GameElements.AI
 {
     class Brain : IArtificialIntelligence
     {
+        private bool reverseHorizontal;
+
+        public Brain(bool reverseHorizontal)
+        {
+            this.reverseHorizontal = reverseHorizontal;
+        }
+
+        public float PaddlePosition { get; set; }
+        public int Score { get; set; }
+
         public Input GetInput()
         {
             throw new NotImplementedException();
