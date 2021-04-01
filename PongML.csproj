@@ -66,6 +66,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GameElements\AI\Neural\INeuron.cs" />
+    <Compile Include="GameElements\AI\Neural\IPerceptron.cs" />
+    <Compile Include="GameElements\AI\Neural\Memory.cs" />
+    <Compile Include="GameElements\AI\Neural\Neuron.cs" />
+    <Compile Include="GameElements\AI\Neural\Perceptron.cs" />
     <Compile Include="GameElements\AI\RandomAI.cs" />
     <Compile Include="GameElements\HumanPlayer.cs" />
     <Compile Include="GameElements\Input.cs" />
