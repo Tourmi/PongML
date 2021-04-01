@@ -8,6 +8,9 @@ namespace PongML.GameElements
 {
     interface IPlayer
     {
+        float PaddlePosition { get; set; }
+        int Score { get; set; }
+
         Input GetInput();
     }
 }

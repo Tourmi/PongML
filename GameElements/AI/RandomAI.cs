@@ -20,6 +20,9 @@ namespace PongML.GameElements.AI
             holdUntil = 0;
         }
 
+        public float PaddlePosition { get; set; }
+        public int Score { get; set; }
+
         public Input GetInput()
         {
             if (currentFrame >= holdUntil)
@@ -39,7 +42,7 @@ namespace PongML.GameElements.AI
                         break;
                 }
 
-                newInput.Intensity = random.NextDouble() + 0.1;
+                newInput.Intensity = ((float)random.NextDouble()) + 0.1f;
                 currentInput = newInput;
             }
 
