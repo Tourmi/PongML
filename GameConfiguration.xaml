@@ -1,0 +1,111 @@
+﻿<Page x:Class="PongML.GameConfiguration"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:PongML"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="800"
+      Title="GameConfiguration" Background="White">
+
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="80*"/>
+                    <ColumnDefinition Width="10*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Padding="10" Text="Neural Network" FontWeight="ExtraBold" Foreground="DarkBlue" FontSize="14"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Padding="10" Text="Neuron Count:"/>
+                <Slider Name="NeuronCount" Minimum="1" Maximum="20" Grid.Row="1" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Padding="10" Text="{Binding ElementName=NeuronCount, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Padding="10" Text="Layer Count:"/>
+                <Slider Name="LayerCount" Minimum="1" Maximum="5" Grid.Row="2" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Padding="10" Text="{Binding ElementName=LayerCount, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Padding="10" Text="Memory Neuron Count:"/>
+                <Slider Name="MemoryNeuronCount" Minimum="0" Maximum="8" Grid.Row="3" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Padding="10" Text="{Binding ElementName=MemoryNeuronCount, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Padding="10" Text="Base Evolution Factor:"/>
+                <Slider Name="BaseEvolutionFactor" Minimum="0" Maximum="100" Grid.Row="4" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="4" Grid.Column="2" Padding="10" Text="{Binding ElementName=BaseEvolutionFactor, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="80*"/>
+                    <ColumnDefinition Width="10*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Padding="10" Text="Training" FontWeight="ExtraBold" Foreground="DarkBlue" FontSize="14"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Padding="10" Text="Amount of AIs to train:"/>
+                <Slider Name="NumberOfAIs" Minimum="2" Maximum="128" Grid.Row="1" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Padding="10" Text="{Binding ElementName=NumberOfAIs, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Padding="10" Text="Keep the best AIs:"/>
+                <Slider Name="KeepBestAIs" Minimum="1" Maximum="16" Grid.Row="2" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Padding="10" Text="{Binding ElementName=KeepBestAIs, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Padding="10" Text="Game Length(in frames):"/>
+                <Slider Name="GameLength" Minimum="3600" Maximum="36000" Grid.Row="3" Grid.Column="1" Margin="10" TickFrequency="1800" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Padding="10" Text="{Binding ElementName=GameLength, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Padding="10" Text="Save the best AI in a file every round:"/>
+                <CheckBox Name="SaveBestAIAfterEveryRound" Grid.Row="4" Grid.Column="1" Margin="10"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Padding="10" Text="Save the best AI in a file after &#x0a;stopping simulation:"/>
+                <CheckBox Name="SaveBestAIAfterStoppingSim" Grid.Row="5" Grid.Column="1" Margin="10"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="80*"/>
+                    <ColumnDefinition Width="10*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Padding="10" Text="Game" FontWeight="ExtraBold" Foreground="DarkBlue" FontSize="14"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Padding="10" Text="Initial Ball Speed:"/>
+                <Slider Name="InitialBallSpeed" Minimum="3" Maximum="20" Grid.Row="1" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Padding="10" Text="{Binding ElementName=InitialBallSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Padding="10" Text="Ball Speed Increment:"/>
+                <Slider Name="BallSpeedIncrement" Minimum="1" Maximum="5" Grid.Row="2" Grid.Column="1" Margin="10" TickFrequency="0.5" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Padding="10" Text="{Binding ElementName=BallSpeedIncrement, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Padding="10" Text="Paddle Speed:"/>
+                <Slider Name="PaddleSpeed" Minimum="5" Maximum="50" Grid.Row="3" Grid.Column="1" Margin="10" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Padding="10" Text="{Binding ElementName=PaddleSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Page>
