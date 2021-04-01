@@ -23,32 +23,33 @@ namespace PongML.Models
         public int ArenaHeight { get; set; }
         public int PaddleSize { get; set; }
         public float PaddleSpeed { get; set; }
+        public readonly IPlayer[] Players;
 
         private readonly List<IArtificialIntelligence> ais;
-        private readonly IPlayer[] players;
         private readonly Random random;
 
         public Game()
         {
             ais = new List<IArtificialIntelligence>();
-            players = new IPlayer[2];
+            Players = new IPlayer[2];
             random = new Random();
 
-            players[0] = new HumanPlayer(Key.W, Key.S);
+            Players[0] = new HumanPlayer(Key.W, Key.S);
             IArtificialIntelligence ai = new RandomAI();
-            players[1] = ai;
+            Players[1] = ai;
             ais.Add(ai);
 
-            BallSpeed = InitialBallSpeed;
-            BallPos = new Vector2(ArenaWidth / 2, ArenaHeight / 2);
-            BallDirection = new Vector2(1, 0);
-            BallSpeedIncrement = 0.5f;
-
-            BallSize = 6;
+            BallSize = 16;
             ArenaWidth = 1000;
             ArenaHeight = 500;
-            PaddleSize = 50;
-            PaddleSpeed = 8;
+            PaddleSize = 75;
+            PaddleSpeed = 10;
+
+            InitialBallSpeed = 5;
+            BallSpeed = InitialBallSpeed;
+            BallPos = new Vector2(ArenaWidth / 2, ArenaHeight / 2);
+            BallDirection = new Vector2(-1, 0);
+            BallSpeedIncrement = 1;
         }
 
         public void Update()
@@ -58,7 +59,7 @@ namespace PongML.Models
                 ai.Update(this);
             }
 
-            foreach (IPlayer player in players)
+            foreach (IPlayer player in Players)
             {
                 var input = player.GetInput();
 
@@ -93,7 +94,7 @@ namespace PongML.Models
                 BallPos = new Vector2(BallPos.X, ArenaHeight - BallSize / 2);
                 BallDirection = new Vector2(BallDirection.X, -BallDirection.Y);
             }
-            else if (BallPos.Y - (BallSize / 2) < ArenaHeight)
+            else if (BallPos.Y - (BallSize / 2) < 0)
             {
                 BallPos = new Vector2(BallPos.X, 0 + BallSize / 2);
                 BallDirection = new Vector2(BallDirection.X, -BallDirection.Y);
@@ -119,12 +120,12 @@ namespace PongML.Models
 
             float minBallPos = BallPos.Y - BallSize / 2;
             float maxBallPos = BallPos.Y + BallSize / 2;
-            float minPaddlePos = players[playerIndex].PaddlePosition - PaddleSize / 2;
-            float maxPaddlePos = players[playerIndex].PaddlePosition + PaddleSize / 2;
+            float minPaddlePos = Players[playerIndex].PaddlePosition - PaddleSize / 2;
+            float maxPaddlePos = Players[playerIndex].PaddlePosition + PaddleSize / 2;
             if (maxBallPos >= minPaddlePos && minBallPos <= maxPaddlePos)
             {
                 //The ball bounces back
-                float yAngle = (BallPos.Y - players[playerIndex].PaddlePosition) / PaddleSize * 4;
+                float yAngle = (BallPos.Y - Players[playerIndex].PaddlePosition) / PaddleSize * 4;
 
                 BallDirection = Vector2.Normalize(new Vector2(oppositePlayer * 2 - 1, yAngle));
                 BallSpeed += BallSpeedIncrement;
@@ -132,7 +133,7 @@ namespace PongML.Models
             else
             {
                 //The ball passed through
-                players[oppositePlayer].Score++;
+                Players[oppositePlayer].Score++;
                 BallPos = new Vector2(ArenaWidth / 2, ArenaHeight / 2);
                 BallSpeed = InitialBallSpeed;
                 BallDirection = Vector2.Normalize(new Vector2((oppositePlayer * 2) - 1, (float)((random.NextDouble() - 0.5) * 4)));
