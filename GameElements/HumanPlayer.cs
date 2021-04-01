@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace PongML.GameElements
@@ -23,15 +24,18 @@ namespace PongML.GameElements
 
         public Input GetInput()
         {
-            Input input = new Input() { Direction = Direction.None, Intensity = 1};
-            if (Keyboard.IsKeyDown(upKey) && !Keyboard.IsKeyDown(downKey))
+            Input input = new Input() { Direction = Direction.None, Intensity = 1 };
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                input.Direction = Direction.Up;
-            }
-            if (Keyboard.IsKeyDown(downKey) && !Keyboard.IsKeyDown(upKey))
-            {
-                input.Direction = Direction.Down;
-            }
+                if (Keyboard.IsKeyDown(upKey) && !Keyboard.IsKeyDown(downKey))
+                {
+                    input.Direction = Direction.Up;
+                }
+                if (Keyboard.IsKeyDown(downKey) && !Keyboard.IsKeyDown(upKey))
+                {
+                    input.Direction = Direction.Down;
+                }
+            });
 
             return input;
         }
