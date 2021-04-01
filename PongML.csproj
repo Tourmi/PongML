@@ -56,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="GameConfiguration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     <Page Include="GameControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -64,6 +67,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="GameConfiguration.xaml.cs">
+      <DependentUpon>GameConfiguration.xaml</DependentUpon>
     <Compile Include="GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
@@ -74,6 +79,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameElements\AI\RandomAI.cs" />
+    <Compile Include="Models\GameConfiguration.cs" />
     <Compile Include="GameElements\HumanPlayer.cs" />
     <Compile Include="GameElements\Input.cs" />
     <Compile Include="GameElements\IPlayer.cs" />

@@ -52,6 +52,14 @@ namespace PongML.Models
             BallSpeedIncrement = 1;
         }
 
+        public Game(GameConfiguration gc):this()
+        {
+            BallSpeed = gc.InitialBallSpeed;
+            BallSpeedIncrement = gc.BallSpeedIncrement;
+            PaddleSpeed = gc.PaddleSpeed;
+            InitialBallSpeed = gc.InitialBallSpeed;
+        }
+
         public void Update()
         {
             foreach (var ai in ais)
