@@ -39,7 +39,7 @@ namespace PongML.Models
             this.NeuronCount = 8;
             this.LayerCount = 1;
             this.MemoryNeuronCount = 0;
-            this.BaseEvolutionFactor = 1;
+            this.BaseEvolutionFactor = 100;
 
             this.NumberOfAIs = 64;
             this.KeepBestAIs = 8;
