@@ -16,8 +16,12 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <DockPanel Grid.Row="0">
+            <DockPanel>
                 <Button Name="Btn_BackMainMenu" Margin="3" Width="125" HorizontalAlignment="Left" Click="Btn_BackMainMenu_Click">Back to Main Menu</Button>
+            </DockPanel>
+            <DockPanel Grid.Row="0" HorizontalAlignment="Right">
+                <Button Name="Btn_SaveConfig" Margin="3" Width="125" HorizontalAlignment="Right" Click="Btn_SaveConfig_Click">Save Configuration</Button>
+                <Button Name="Btn_LoadConfig" Margin="3" Width="125" HorizontalAlignment="Right" Click="Btn_LoadConfig_Click">Load Configuration</Button>
             </DockPanel>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>

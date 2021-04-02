@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,5 +72,8 @@ namespace PongML.Models
             this.BallSpeedIncrement = ballSpeedIncrement;
             this.PaddleSpeed = paddleSpeed;
         }
+        public static GameConfiguration FromJson(string json) => JsonConvert.DeserializeObject<GameConfiguration>(json);
+
+        public string ToJson() => JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 }
