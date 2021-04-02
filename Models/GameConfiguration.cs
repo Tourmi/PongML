@@ -36,20 +36,20 @@ namespace PongML.Models
 
         public GameConfiguration()
         {
-            this.NeuronCount = 1;
+            this.NeuronCount = 8;
             this.LayerCount = 1;
             this.MemoryNeuronCount = 0;
-            this.BaseEvolutionFactor = 0;
+            this.BaseEvolutionFactor = 1;
 
-            this.NumberOfAIs = 2;
-            this.KeepBestAIs = 1;
-            this.GameLength = 3600;
+            this.NumberOfAIs = 64;
+            this.KeepBestAIs = 8;
+            this.GameLength = 10800;
             this.SaveBestAIAfterEveryRound = false;
             this.SaveBestAIAfterStoppingSim = true;
 
-            this.InitialBallSpeed = 3;
-            this.BallSpeedIncrement = 5;
-            this.PaddleSpeed = 5;
+            this.InitialBallSpeed = 5;
+            this.BallSpeedIncrement = 1;
+            this.PaddleSpeed = 10;
         }
 
         public GameConfiguration(int neuronCount, int layerCount, int memoryNeuronCount, int baseEvolutionFactor,
