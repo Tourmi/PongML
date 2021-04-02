@@ -1,4 +1,5 @@
-﻿using PongML.GameElements.AI.Neural;
+﻿using Newtonsoft.Json;
+using PongML.GameElements.AI.Neural;
 using PongML.Models;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,24 @@ namespace PongML.GameElements.AI
 {
     class Brain : IArtificialIntelligence
     {
-        public bool ReverseHorizontal { get; set; }
+        public bool ReverseHorizontal { private get; set; }
         private readonly Random random;
 
-        private IPerceptron xBall;
-        private IPerceptron yBall;
-        private IPerceptron myPaddle;
-        private IPerceptron theirPaddle;
+        private readonly IPerceptron xBall;
+        private readonly IPerceptron yBall;
+        private readonly IPerceptron myPaddle;
+        private readonly IPerceptron theirPaddle;
+        [JsonProperty]
         private Memory[] memories;
 
+        [JsonProperty]
         private INeuron[][] hiddenLayers;
+        [JsonProperty]
         private INeuron[] outputLayer;
+        [JsonIgnore]
+        public float PaddlePosition { get; set; }
+        [JsonIgnore]
+        public int Score { get; set; }
 
         private Brain()
         {
@@ -76,8 +84,6 @@ namespace PongML.GameElements.AI
             }
         }
 
-        public float PaddlePosition { get; set; }
-        public int Score { get; set; }
 
         public Input GetInput()
         {
@@ -118,7 +124,7 @@ namespace PongML.GameElements.AI
             float[] weights = new float[count];
             for (int i = 0; i < count; i++)
             {
-                weights[i] = random.Next() * 2 - 1;
+                weights[i] = (float)random.NextDouble() * 2 - 1;
             }
             return weights;
         }
@@ -133,10 +139,59 @@ namespace PongML.GameElements.AI
             return weights;
         }
 
+        public string ToJson()
+        {
+            var jsonSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented
+            };
+
+            return JsonConvert.SerializeObject(this, jsonSettings);
+        }
+
+        public static Brain FromJson(string json)
+        {
+            Brain brain = JsonConvert.DeserializeObject<Brain>(json, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto});
+
+            INeuron[] lastLayer = new INeuron[4 + brain.memories.Length];
+
+            lastLayer[0] = brain.xBall;
+            lastLayer[1] = brain.yBall;
+            lastLayer[2] = brain.myPaddle;
+            lastLayer[3] = brain.theirPaddle;
+            for (int i = 0; i < brain.memories.Length; i++)
+            {
+                brain.memories[i].MemoryOutput = brain.outputLayer[2 + i];
+                lastLayer[i + 4] = brain.memories[i];
+            }
+
+            for (int i = 0; i < brain.hiddenLayers.Length; i++)
+            {
+                for (int j = 0; j< brain.hiddenLayers[i].Length; j++)
+                {
+                    brain.hiddenLayers[i][j].PreviousNeurons = lastLayer;
+                }
+
+                lastLayer = brain.hiddenLayers[i];
+            }
+
+            for (int i = 0; i < brain.outputLayer.Length; i++)
+            {
+                brain.outputLayer[i].PreviousNeurons = lastLayer;
+            }
+
+            return brain;
+        }
+
         public Brain GenerateChild()
         {
             Brain newBrain = new Brain();
             INeuron[] lastLayer = new INeuron[4 + memories.Length];
+            lastLayer[0] = newBrain.xBall;
+            lastLayer[1] = newBrain.yBall;
+            lastLayer[2] = newBrain.myPaddle;
+            lastLayer[3] = newBrain.theirPaddle;
 
             newBrain.memories = new Memory[memories.Length];
             for (int i = 0; i < memories.Length; i++)
