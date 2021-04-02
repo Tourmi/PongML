@@ -20,9 +20,10 @@ namespace PongML
     /// </summary>
     public partial class GameConfiguration : Page
     {
-        public GameConfiguration()
+        public GameConfiguration(Models.GameConfiguration gc)
         {
             InitializeComponent();
+            SetConfiguration(gc);
         }
 
         public void SetConfiguration(Models.GameConfiguration gc)
@@ -62,6 +63,12 @@ namespace PongML
             };
 
             return gc;
+        }
+
+        private void Btn_BackMainMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.Content = new MainMenu(GetGameConfiguration());
         }
     }
 }
