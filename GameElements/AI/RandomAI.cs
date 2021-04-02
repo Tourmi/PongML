@@ -9,7 +9,7 @@ namespace PongML.GameElements.AI
 {
     class RandomAI : IArtificialIntelligence
     {
-        private Random random;
+        private readonly Random random;
         private int holdUntil;
         private int currentFrame;
         private Input currentInput;
@@ -29,15 +29,17 @@ namespace PongML.GameElements.AI
             {
                 holdUntil += random.Next(6, 30);
                 Input newInput = new Input();
-                switch(random.Next(0,3))
+                switch(random.Next(0,5))
                 {
                     case 0:
                         newInput.Direction = Direction.None;
                         break;
                     case 1:
+                    case 2:
                         newInput.Direction = Direction.Up;
                         break;
-                    case 2:
+                    case 3:
+                    case 4:
                         newInput.Direction = Direction.Down;
                         break;
                 }
