@@ -20,14 +20,20 @@ namespace PongML.SimulationElements
             }
 
             public Brain Brain { get; set; }
+            public Semaphore Semaphore { get; } = new Semaphore(1, 1);
             public bool[] GamesPlayed { get; set; }
             public int NetScore { get; set; }
             public int NetMatches { get; set; }
+
+            public bool PlayedAllGames() => GamesPlayed.All(gp => gp);
         }
 
         private bool stop;
         private readonly AiPlayed[] ais;
+        private int doneCount;
+        private readonly object doneCountLock = new object();
         private readonly Models.GameConfiguration gc;
+        private Brain[] lastWinners;
 
         public Simulation(Models.GameConfiguration gc)
         {
@@ -57,15 +63,69 @@ namespace PongML.SimulationElements
 
             while (!stop)
             {
-                //TODO : Select AI
+                for (int i = 0; i < ais.Length; i++)
+                {
+                    ThreadPool.QueueUserWorkItem(state => process(i));
+                }
+                lock (doneCountLock)
+                {
+                    while (doneCount < ais.Length)
+                    {
+                        Monitor.Wait(doneCountLock);
+                    }
+                }
 
                 newRound();
+                //TODO: Save best AI to file
             }
+            //TODO : Save best AI to file
         }
 
         public void Stop()
         {
             stop = true;
+        }
+
+        private void process(int self)
+        {
+            Random random = new Random(self);
+            //Randomizing the order of the opponents avoids too much interblocking
+            int[] opponents = Enumerable.Range(1, ais.Length - 1).OrderBy(x => random.Next()).ToArray();
+
+            foreach (int opponent in opponents)
+            {
+                int other = (self + opponent) % ais.Length;
+                AiPlayed selfAi = ais[self];
+                AiPlayed otherAi = ais[other];
+
+                //To avoid deadlocks, we need to determine the order depending on the indexes
+                if (self < other)
+                {
+                    selfAi.Semaphore.WaitOne();
+                    otherAi.Semaphore.WaitOne();
+                }
+                else
+                {
+                    otherAi.Semaphore.WaitOne();
+                    selfAi.Semaphore.WaitOne();
+                }
+
+                if (selfAi.GamesPlayed[other]) continue;
+
+                fight(selfAi, otherAi);
+
+                selfAi.GamesPlayed[other] = true;
+                otherAi.GamesPlayed[self] = true;
+
+                otherAi.Semaphore.Release();
+                selfAi.Semaphore.Release();
+            }
+
+            lock (doneCountLock)
+            {
+                doneCount++;
+                Monitor.Pulse(doneCountLock);
+            }
         }
 
         private void fight(AiPlayed player1, AiPlayed player2)
@@ -87,25 +147,25 @@ namespace PongML.SimulationElements
 
         private void newRound()
         {
-            Brain[] winners = ais
+            lastWinners = ais
                 .OrderByDescending(ai => ai.NetMatches)
                 .ThenByDescending(ai => ai.NetScore)
                 .Take((int)gc.KeepBestAIs)
                 .Select(ai => ai.Brain)
                 .ToArray();
 
-            foreach (Brain winner in winners)
+            foreach (Brain winner in lastWinners)
             {
                 winner.Score = 0;
                 winner.ReverseHorizontal = false;
             }
-            for (int i = 0; i < winners.Length; i++)
+            for (int i = 0; i < lastWinners.Length; i++)
             {
-                ais[i].Brain = winners[i];
+                ais[i].Brain = lastWinners[i];
             }
-            for (int i = winners.Length; i < ais.Length; i++)
+            for (int i = lastWinners.Length; i < ais.Length; i++)
             {
-                ais[i].Brain = winners[i % winners.Length].GenerateChild(gc.BaseEvolutionFactor / 100.0f);
+                ais[i].Brain = lastWinners[i % lastWinners.Length].GenerateChild(gc.BaseEvolutionFactor / 100.0f);
             }
 
             foreach (AiPlayed ai in ais)
@@ -117,6 +177,8 @@ namespace PongML.SimulationElements
                     ai.GamesPlayed[i] = false;
                 }
             }
+
+            doneCount = 0;
         }
     }
 }

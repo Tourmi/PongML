@@ -11,6 +11,7 @@ namespace PongML.GameElements.AI
     class Brain : IArtificialIntelligence
     {
         public bool ReverseHorizontal { get; set; }
+        public int PlayerNumber { get; set; }
         private readonly Random random;
 
         private IPerceptron xBall;
@@ -96,6 +97,11 @@ namespace PongML.GameElements.AI
                 input.Direction = Direction.Down;
             }
 
+            //Update the memory values
+            for (int i = 2; i < outputLayer.Length; i++) {
+                outputLayer[i].GetValue();
+            }
+
             return input;
         }
 
@@ -104,8 +110,8 @@ namespace PongML.GameElements.AI
             int xModifier = ReverseHorizontal ? -1 : 1;
             xBall.SetValue((game.BallPos.X / game.ArenaWidth - 0.5f) * xModifier);
             yBall.SetValue(game.BallPos.Y / game.ArenaHeight - 0.5f);
-            //TODO: myPaddle
-            //TODO: theirPaddle
+            myPaddle.SetValue(game.Players[PlayerNumber].PaddlePosition / game.ArenaHeight - 0.5f);
+            theirPaddle.SetValue(game.Players[(PlayerNumber + 1) % 2].PaddlePosition / game.ArenaHeight - 0.5f);
 
             foreach (Memory memory in memories)
             {
