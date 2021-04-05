@@ -20,9 +20,17 @@ namespace PongML
     /// </summary>
     public partial class MainWindow : Window
     {
+        MainMenu menu;
+        Models.GameConfiguration gc;
+
         public MainWindow()
         {
             InitializeComponent();
+            gc = new Models.GameConfiguration();
+            menu = new MainMenu(gc);
+            Content = menu;
         }
+
+
     }
 }

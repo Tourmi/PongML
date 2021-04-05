@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +22,10 @@ namespace PongML
     /// </summary>
     public partial class GameConfiguration : Page
     {
-        public GameConfiguration()
+        public GameConfiguration(Models.GameConfiguration gc)
         {
             InitializeComponent();
+            SetConfiguration(gc);
         }
 
         public void SetConfiguration(Models.GameConfiguration gc)
@@ -62,6 +65,34 @@ namespace PongML
             };
 
             return gc;
+        }
+
+        private void Btn_BackMainMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.Content = new MainMenu(GetGameConfiguration());
+        }
+
+        private void Btn_LoadConfig_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Json file (*.json)|*.json";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Models.GameConfiguration gc = Models.GameConfiguration.FromJson(File.ReadAllText(openFileDialog.FileName));
+                SetConfiguration(gc);
+            }
+                
+        }
+
+        private void Btn_SaveConfig_Click(object sender, RoutedEventArgs e)
+        {
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Json file (*.json)|*.json";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                File.WriteAllText(saveFileDialog.FileName, GetGameConfiguration().ToJson());
+            }
         }
     }
 }
