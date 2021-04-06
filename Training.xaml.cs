@@ -105,7 +105,7 @@ namespace PongML
         {
             try
             {
-                sim.Stop();
+                sim?.Stop();
                 sim.NewGeneration -= OnNewRound;
             }
             catch (Exception ex)
