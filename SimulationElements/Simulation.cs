@@ -25,7 +25,6 @@ namespace PongML.SimulationElements
             public int NetScore { get; set; }
             public int NetMatches { get; set; }
 
-            public bool PlayedAllGames() => GamesPlayed.All(gp => gp);
         }
 
         private bool stop;
@@ -34,6 +33,10 @@ namespace PongML.SimulationElements
         private readonly object doneCountLock = new object();
         private readonly Models.GameConfiguration gc;
         private Brain[] lastWinners;
+
+        public bool Ready { get; private set; }
+        public event Action NewGeneration;
+        public int Round { get; private set; }
 
         public Simulation(Models.GameConfiguration gc)
         {
@@ -60,12 +63,14 @@ namespace PongML.SimulationElements
         public void Start()
         {
             stop = false;
+            Ready = false;
 
             while (!stop)
             {
                 for (int i = 0; i < ais.Length; i++)
                 {
-                    ThreadPool.QueueUserWorkItem(state => process(i));
+                    int processNumber = i;
+                    ThreadPool.QueueUserWorkItem(state => process(processNumber));
                 }
                 lock (doneCountLock)
                 {
@@ -79,6 +84,7 @@ namespace PongML.SimulationElements
                 //TODO: Save best AI to file
             }
             //TODO : Save best AI to file
+            Ready = true;
         }
 
         public void Stop()
@@ -110,8 +116,13 @@ namespace PongML.SimulationElements
                     selfAi.Semaphore.WaitOne();
                 }
 
-                if (selfAi.GamesPlayed[other]) continue;
+                if (selfAi.GamesPlayed[other])
+                {
+                    otherAi.Semaphore.Release();
+                    selfAi.Semaphore.Release();
 
+                    continue;
+                }
                 fight(selfAi, otherAi);
 
                 selfAi.GamesPlayed[other] = true;
@@ -179,6 +190,8 @@ namespace PongML.SimulationElements
             }
 
             doneCount = 0;
+            Round++;
+            NewGeneration.Invoke();
         }
     }
 }
