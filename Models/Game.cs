@@ -28,16 +28,26 @@ namespace PongML.Models
         private readonly List<IArtificialIntelligence> ais;
         private readonly Random random;
 
-        public Game()
+        public Game() : this(new HumanPlayer(Key.W, Key.S), new RandomAI()) { }
+
+        public Game(IPlayer player1, IPlayer player2)
         {
             ais = new List<IArtificialIntelligence>();
-            Players = new IPlayer[2];
+            Players = new IPlayer[] { player1, player2 };
             random = new Random();
 
-            Players[0] = new HumanPlayer(Key.W, Key.S);
-            IArtificialIntelligence ai = new RandomAI();
-            Players[1] = ai;
-            ais.Add(ai);
+            if (player1 is IArtificialIntelligence ai1)
+            {
+                ais.Add(ai1);
+                if (ai1 is Brain brain)
+                {
+                    brain.ReverseHorizontal = true;
+                }
+            }
+            if (player2 is IArtificialIntelligence ai2)
+            {
+                ais.Add(ai2);
+            }
 
             BallSize = 16;
             ArenaWidth = 1000;
@@ -52,7 +62,7 @@ namespace PongML.Models
             BallSpeedIncrement = 1;
         }
 
-        public Game(GameConfiguration gc):this()
+        public Game(GameConfiguration gc, IPlayer player1, IPlayer player2) : this(player1, player2)
         {
             BallSpeed = gc.InitialBallSpeed;
             BallSpeedIncrement = gc.BallSpeedIncrement;

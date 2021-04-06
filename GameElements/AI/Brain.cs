@@ -11,6 +11,9 @@ namespace PongML.GameElements.AI
 {
     class Brain : IArtificialIntelligence
     {
+        [JsonIgnore]
+        public int PlayerNumber { get; set; }
+        [JsonIgnore]
         public bool ReverseHorizontal { private get; set; }
         private readonly Random random;
 
@@ -102,6 +105,11 @@ namespace PongML.GameElements.AI
                 input.Direction = Direction.Down;
             }
 
+            //Update the memory values
+            for (int i = 2; i < outputLayer.Length; i++) {
+                outputLayer[i].GetValue();
+            }
+
             return input;
         }
 
@@ -110,8 +118,8 @@ namespace PongML.GameElements.AI
             int xModifier = ReverseHorizontal ? -1 : 1;
             xBall.SetValue((game.BallPos.X / game.ArenaWidth - 0.5f) * xModifier);
             yBall.SetValue(game.BallPos.Y / game.ArenaHeight - 0.5f);
-            //TODO: myPaddle
-            //TODO: theirPaddle
+            myPaddle.SetValue(game.Players[PlayerNumber].PaddlePosition / game.ArenaHeight - 0.5f);
+            theirPaddle.SetValue(game.Players[(PlayerNumber + 1) % 2].PaddlePosition / game.ArenaHeight - 0.5f);
 
             foreach (Memory memory in memories)
             {
@@ -129,11 +137,11 @@ namespace PongML.GameElements.AI
             return weights;
         }
 
-        private float[] generateWeights(float[] weights)
+        private float[] generateWeights(float[] weights, float evolutionFactor)
         {
             for (int i = 0; i < weights.Length; i++)
             {
-                weights[i] += ((float)random.NextDouble() * 2 - 1) * weights[i];
+                weights[i] += ((float)random.NextDouble() * 2 - 1) * evolutionFactor * weights[i];
             }
 
             return weights;
@@ -183,8 +191,8 @@ namespace PongML.GameElements.AI
 
             return brain;
         }
-
-        public Brain GenerateChild()
+        
+        public Brain GenerateChild(float evolutionFactor)
         {
             Brain newBrain = new Brain();
             INeuron[] lastLayer = new INeuron[4 + memories.Length];
@@ -209,7 +217,7 @@ namespace PongML.GameElements.AI
 
                 for (int j = 0; j < hiddenLayers[i].Length; j++)
                 {
-                    newBrain.hiddenLayers[i][j] = new Neuron(lastLayer, generateWeights(hiddenLayers[i][j].Weights));
+                    newBrain.hiddenLayers[i][j] = new Neuron(lastLayer, generateWeights(hiddenLayers[i][j].Weights, evolutionFactor));
                 }
 
                 lastLayer = newBrain.hiddenLayers[i];
@@ -219,7 +227,7 @@ namespace PongML.GameElements.AI
 
             for (int i = 0; i < 2 + memories.Length; i++)
             {
-                newBrain.outputLayer[i] = new Neuron(lastLayer, generateWeights(outputLayer[i].Weights));
+                newBrain.outputLayer[i] = new Neuron(lastLayer, generateWeights(outputLayer[i].Weights, evolutionFactor));
             }
 
             for (int i = 0; i < memories.Length; i++)
