@@ -2,6 +2,7 @@
 using PongML.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -82,8 +83,24 @@ namespace PongML.SimulationElements
 
                 newRound();
                 //TODO: Save best AI to file
+                if (gc.SaveBestAIAfterEveryRound)
+                {
+                    Directory.CreateDirectory("AISaves");
+                    for (int i = 0; i < lastWinners.Length; i++)
+                    {
+                        File.WriteAllText("AISaves/" + Round + "_" + i + ".json", lastWinners[i].ToJson());
+                    }
+                }
             }
             //TODO : Save best AI to file
+            if (gc.SaveBestAIAfterStoppingSim)
+            {
+                Directory.CreateDirectory("AISaves");
+                for (int i = 0; i < lastWinners.Length; i++)
+                {
+                    File.WriteAllText("AISaves/_" + i + ".json", lastWinners[i].ToJson());
+                }
+            }
             Ready = true;
         }
 
@@ -191,7 +208,7 @@ namespace PongML.SimulationElements
 
             doneCount = 0;
             Round++;
-            NewGeneration.Invoke();
+            NewGeneration?.Invoke();
         }
     }
 }
