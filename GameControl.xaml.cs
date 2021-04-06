@@ -22,25 +22,36 @@ namespace PongML
     /// </summary>
     public partial class GameControl : UserControl
     {
-        private readonly Game game;
+        private Game game;
         private readonly Timer updateTimer;
 
         public GameControl()
         {
             InitializeComponent();
 
-            game = new Game();
+            updateTimer = new Timer(16);
+            updateTimer.Elapsed += update;
+        }
+
+        public void Init(Game game)
+        {
+            this.game = game;
 
             Canvas.SetTop(PaddleLeft, game.Players[0].PaddlePosition - game.PaddleSize / 2);
             Canvas.SetTop(PaddleRight, game.Players[1].PaddlePosition - game.PaddleSize / 2);
             Canvas.SetTop(Ball, game.BallPos.Y);
             Canvas.SetLeft(Ball, game.BallPos.X);
+        }
 
-            updateTimer = new Timer(16);
-            updateTimer.Elapsed += update;
+        public void Start()
+        {
             updateTimer.Start();
         }
 
+        public void Stop()
+        {
+            updateTimer.Stop();
+        }
 
         private void update(object sender, ElapsedEventArgs e)
         {
