@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PongML.GameElements
 {
-    interface IPlayer
+    public interface IPlayer
     {
         float PaddlePosition { get; set; }
         int Score { get; set; }

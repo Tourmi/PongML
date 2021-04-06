@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace PongML.Models
 {
-    class Game
+    public class Game
     {
         public int CurrentFrame { get; set; }
         public Vector2 BallPos { get; set; }
@@ -54,6 +54,9 @@ namespace PongML.Models
             ArenaHeight = 500;
             PaddleSize = 75;
             PaddleSpeed = 10;
+
+            player1.PaddlePosition = ArenaHeight / 2;
+            player2.PaddlePosition = ArenaHeight / 2;
 
             InitialBallSpeed = 5;
             BallSpeed = InitialBallSpeed;

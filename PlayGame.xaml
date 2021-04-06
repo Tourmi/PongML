@@ -24,8 +24,8 @@
         </DockPanel>
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" >
             <Button Name="Btn_HumanVsHuman" Margin="5" Click="Btn_HumanVsHuman_Click" >Human vs Human</Button>
-            <Button Name="Btn_HumanVsAI" Margin="5" Click="Btn_HumanVsAI_Click">Human vs AI(load the AI file)</Button>
-            <Button Name="Btn_AIvsAI" Margin="5" Click="Btn_AIvsAI_Click">AI vs AI(load two AI files)</Button>
+            <Button Name="Btn_HumanVsAI" Margin="5" Click="Btn_HumanVsAI_Click">Human vs AI</Button>
+            <Button Name="Btn_AIvsAI" Margin="5" Click="Btn_AIvsAI_Click">AI vs AI</Button>
         </StackPanel>
 
     </Grid>
