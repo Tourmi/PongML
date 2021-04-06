@@ -132,7 +132,7 @@ namespace PongML.GameElements.AI
             float[] weights = new float[count];
             for (int i = 0; i < count; i++)
             {
-                weights[i] = (float)random.NextDouble() * 2 - 1;
+                weights[i] = (float)random.NextDouble() * 4 - 2;
             }
             return weights;
         }
@@ -141,7 +141,7 @@ namespace PongML.GameElements.AI
         {
             for (int i = 0; i < weights.Length; i++)
             {
-                weights[i] += ((float)random.NextDouble() * 2 - 1) * evolutionFactor * weights[i];
+                weights[i] += ((float)random.NextDouble() * 2 - 1) * evolutionFactor * weights[i] + 0.01f * evolutionFactor * ((float)random.NextDouble() - 0.5f);
             }
 
             return weights;
