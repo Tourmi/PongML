@@ -61,7 +61,7 @@ namespace PongML.Models
             InitialBallSpeed = 5;
             BallSpeed = InitialBallSpeed;
             BallPos = new Vector2(ArenaWidth / 2, ArenaHeight / 2);
-            BallDirection = new Vector2(-1, 0);
+            BallDirection = Vector2.Normalize(new Vector2(random.Next(2) * 2 - 1, (float)random.NextDouble() - 0.5f));
             BallSpeedIncrement = 1;
         }
 
