@@ -167,17 +167,19 @@ namespace PongML.SimulationElements
             int finalScore = player1.Brain.Score - player2.Brain.Score;
             int match = finalScore == 0 ? 0 : finalScore > 0 ? 1 : -1;
 
-            player1.NetScore += finalScore;
-            player2.NetScore -= finalScore;
+            player1.NetScore += finalScore - player2.Brain.Score; // Penalty for letting the other score
+            player2.NetScore -= finalScore + player1.Brain.Score; // Penalty for letting the other score
             player1.NetMatches += match;
             player2.NetMatches -= match;
+            player1.Brain.Score = 0;
+            player2.Brain.Score = 0;
         }
 
         private void newRound()
         {
             lastWinners = ais
-                .OrderByDescending(ai => ai.NetMatches)
-                .ThenByDescending(ai => ai.NetScore)
+                .OrderByDescending(ai => ai.NetScore)
+                .ThenByDescending(ai => ai.NetMatches)
                 .Take((int)gc.KeepBestAIs)
                 .Select(ai => ai.Brain)
                 .ToArray();
@@ -193,7 +195,9 @@ namespace PongML.SimulationElements
             }
             for (int i = lastWinners.Length; i < ais.Length; i++)
             {
-                ais[i].Brain = lastWinners[i % lastWinners.Length].GenerateChild(gc.BaseEvolutionFactor / 100.0f);
+                const int slowDownFactor = 1000;
+                float currEvolutionFactor = ((gc.BaseEvolutionFactor / 100.0f) * slowDownFactor) / (slowDownFactor + Round);
+                ais[i].Brain = lastWinners[i % lastWinners.Length].GenerateChild(currEvolutionFactor);
             }
 
             foreach (AiPlayed ai in ais)

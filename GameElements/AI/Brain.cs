@@ -118,10 +118,10 @@ namespace PongML.GameElements.AI
         public void Update(Game game)
         {
             int xModifier = ReverseHorizontal ? -1 : 1;
-            xBall.SetValue((game.BallPos.X / game.ArenaWidth - 0.5f) * xModifier);
-            yBall.SetValue(game.BallPos.Y / game.ArenaHeight - 0.5f);
-            myPaddle.SetValue(game.Players[PlayerNumber].PaddlePosition / game.ArenaHeight - 0.5f);
-            theirPaddle.SetValue(game.Players[(PlayerNumber + 1) % 2].PaddlePosition / game.ArenaHeight - 0.5f);
+            xBall.SetValue((game.BallPos.X - game.ArenaHeight / 2) * xModifier);
+            yBall.SetValue(game.BallPos.Y - game.ArenaHeight / 2);
+            myPaddle.SetValue(game.Players[PlayerNumber].PaddlePosition - game.ArenaHeight/2);
+            theirPaddle.SetValue(game.Players[(PlayerNumber + 1) % 2].PaddlePosition - game.ArenaHeight / 2);
 
             foreach(var output in outputLayer)
             {
