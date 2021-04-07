@@ -96,12 +96,12 @@ namespace PongML.GameElements.AI
 
             float upValue = outputLayer[0].GetValue();
             float downValue = outputLayer[1].GetValue();
-            if (upValue >= 0 && downValue < 0)
+            if (upValue >= 0 && upValue > downValue)
             {
                 input.Intensity = upValue;
                 input.Direction = Direction.Up;
             }
-            else if (downValue >= 0 && upValue < 0)
+            else if (downValue >= 0 && downValue > upValue)
             {
                 input.Intensity = downValue;
                 input.Direction = Direction.Down;
