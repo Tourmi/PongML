@@ -5,6 +5,6 @@
         INeuron[] PreviousNeurons { set; }
         float[] Weights { get; }
         float GetValue();
-        float GetCachedValue();
+        void Update(int frame);
     }
 }

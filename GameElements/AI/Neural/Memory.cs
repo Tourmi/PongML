@@ -18,6 +18,9 @@ namespace PongML.GameElements.AI.Neural
 
         public void SetValue(float value) => currValue = value;
 
-        public float GetCachedValue() => currValue;
+        public void Update(int frame)
+        {
+            currValue = MemoryOutput.GetValue();
+        }
     }
 }

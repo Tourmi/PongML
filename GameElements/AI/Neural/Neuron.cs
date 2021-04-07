@@ -9,6 +9,7 @@ namespace PongML.GameElements.AI.Neural
         [JsonProperty]
         private readonly float[] previousWeights;
         private float cachedValue;
+        private int currUpdate = 0;
 
         public Neuron() { }
 
@@ -21,19 +22,29 @@ namespace PongML.GameElements.AI.Neural
         [JsonIgnore]
         public float[] Weights => previousWeights;
 
-        public float GetCachedValue() => cachedValue;
-
         public float GetValue()
         {
-            float sum = 0;
-            for (int i = 0; i < PreviousNeurons.Length; i++)
+            return cachedValue;
+        }
+
+        public void Update(int frame)
+        {
+            if (currUpdate != frame)
             {
-                sum += PreviousNeurons[i].GetValue() * previousWeights[i];
+                foreach (var neuron in PreviousNeurons)
+                {
+                    neuron.Update(frame);
+                }
+
+                float sum = 0;
+                for (int i = 0; i < PreviousNeurons.Length; i++)
+                {
+                    sum += PreviousNeurons[i].GetValue() * previousWeights[i];
+                }
+
+                cachedValue = sum;
+                currUpdate = frame;
             }
-
-            cachedValue = sum;
-
-            return sum;
         }
     }
 }

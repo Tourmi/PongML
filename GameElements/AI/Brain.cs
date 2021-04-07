@@ -33,6 +33,8 @@ namespace PongML.GameElements.AI
         [JsonIgnore]
         public int Score { get; set; }
 
+        private int updateCount;
+
         private Brain()
         {
             random = new Random();
@@ -121,10 +123,12 @@ namespace PongML.GameElements.AI
             myPaddle.SetValue(game.Players[PlayerNumber].PaddlePosition / game.ArenaHeight - 0.5f);
             theirPaddle.SetValue(game.Players[(PlayerNumber + 1) % 2].PaddlePosition / game.ArenaHeight - 0.5f);
 
-            foreach (Memory memory in memories)
+            foreach(var output in outputLayer)
             {
-                memory.SetValue(memory.MemoryOutput.GetCachedValue());
+                output.Update(updateCount);
             }
+
+            updateCount++;
         }
 
         private float[] generateWeights(int count)
