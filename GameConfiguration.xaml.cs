@@ -37,6 +37,7 @@ namespace PongML
 
             NumberOfAIs.Value = gc.NumberOfAIs;
             KeepBestAIs.Value = gc.KeepBestAIs;
+            MaximumChildren.Value = gc.MaximumChildrenPerAi;
             GameLength.Value = gc.GameLength;
             SaveBestAIAfterEveryRound.IsChecked = gc.SaveBestAIAfterEveryRound;
             SaveBestAIAfterStoppingSim.IsChecked = gc.SaveBestAIAfterStoppingSim;
@@ -56,6 +57,7 @@ namespace PongML
                 BaseEvolutionFactor = (int)BaseEvolutionFactor.Value,
                 NumberOfAIs = (uint)NumberOfAIs.Value,
                 KeepBestAIs = (uint)KeepBestAIs.Value,
+                MaximumChildrenPerAi = (uint)MaximumChildren.Value,
                 GameLength = (int)GameLength.Value,
                 SaveBestAIAfterEveryRound = (bool)SaveBestAIAfterEveryRound.IsChecked,
                 SaveBestAIAfterStoppingSim = (bool)SaveBestAIAfterStoppingSim.IsChecked,

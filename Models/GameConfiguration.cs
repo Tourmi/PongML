@@ -23,6 +23,7 @@ namespace PongML.Models
          */
         public uint NumberOfAIs { get; set; }
         public uint KeepBestAIs { get; set; }
+        public uint MaximumChildrenPerAi { get; set; }
         //Game length in frames
         public int GameLength { get; set; }
         public bool SaveBestAIAfterEveryRound { get; set; }
@@ -44,6 +45,7 @@ namespace PongML.Models
 
             this.NumberOfAIs = 64;
             this.KeepBestAIs = 8;
+            this.MaximumChildrenPerAi = 6;
             this.GameLength = 10800;
             this.SaveBestAIAfterEveryRound = false;
             this.SaveBestAIAfterStoppingSim = true;

@@ -26,9 +26,11 @@ namespace PongML
     {
         private Models.GameConfiguration gc;
         private Simulation sim;
+        private bool stopped;
         public Training(Models.GameConfiguration gc)
         {
             InitializeComponent();
+            stopped = false;
             this.gc = gc;
             Btn_StopTraining.IsEnabled = false;
         }
@@ -47,6 +49,7 @@ namespace PongML
             ThreadPool.QueueUserWorkItem(p => sim.Start());
 
             Btn_StopTraining.IsEnabled = true;
+            Btn_BackMainMenu.IsEnabled = false;
             Btn_StartTraining.IsEnabled = false;
             Btn_StartTrainingFromFile.IsEnabled = false;
         }
@@ -56,16 +59,13 @@ namespace PongML
             try
             {
                 sim.Stop();
-                sim.NewGeneration -= OnNewRound;
+                stopped = true;
+                Btn_StopTraining.IsEnabled = false;
             }
             catch (Exception ex)
             {
                 throw new Exception("Failure when stopping the simulation", ex);
             }
-
-            Btn_StopTraining.IsEnabled = false;
-            Btn_StartTraining.IsEnabled = true;
-            Btn_StartTrainingFromFile.IsEnabled = true;
         }
 
         private void Btn_TrainingFromFile_Click(object sender, RoutedEventArgs e)
@@ -97,6 +97,7 @@ namespace PongML
             ThreadPool.QueueUserWorkItem(p => sim.Start());
 
             Btn_StopTraining.IsEnabled = true;
+            Btn_BackMainMenu.IsEnabled = false;
             Btn_StartTraining.IsEnabled = false;
             Btn_StartTrainingFromFile.IsEnabled = false;
         }
@@ -124,7 +125,17 @@ namespace PongML
         {
             Dispatcher.Invoke(() =>
             {
-                TextBlock_Round.Text = $"Generation: {sim.Round}";
+                TextBlock_Round.Text = $"Generation: {sim.Round}\nBest score: {sim.BestScore}";
+
+                if(stopped)
+                {
+                    stopped = false;
+                    sim.NewGeneration -= OnNewRound;
+
+                    Btn_StartTraining.IsEnabled = true;
+                    Btn_StartTrainingFromFile.IsEnabled = true;
+                    Btn_BackMainMenu.IsEnabled = true;
+                }
             }, System.Windows.Threading.DispatcherPriority.Render);
         }
     }

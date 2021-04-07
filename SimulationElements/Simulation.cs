@@ -38,6 +38,7 @@ namespace PongML.SimulationElements
         public bool Ready { get; private set; }
         public event Action NewGeneration;
         public int Round { get; private set; }
+        public int BestScore { get; private set; }
 
         public Simulation(Models.GameConfiguration gc)
         {
@@ -184,20 +185,26 @@ namespace PongML.SimulationElements
                 .Select(ai => ai.Brain)
                 .ToArray();
 
+            BestScore = ais.OrderByDescending(ai => ai.NetScore).First().NetScore;
+
             foreach (Brain winner in lastWinners)
             {
-                winner.Score = 0;
                 winner.ReverseHorizontal = false;
             }
             for (int i = 0; i < lastWinners.Length; i++)
             {
                 ais[i].Brain = lastWinners[i];
             }
-            for (int i = lastWinners.Length; i < ais.Length; i++)
+            int currIndex;
+            for (currIndex = lastWinners.Length; currIndex < ais.Length && currIndex < gc.MaximumChildrenPerAi * gc.KeepBestAIs; currIndex++)
             {
                 const int slowDownFactor = 1000;
                 float currEvolutionFactor = ((gc.BaseEvolutionFactor / 100.0f) * slowDownFactor) / (slowDownFactor + Round);
-                ais[i].Brain = lastWinners[i % lastWinners.Length].GenerateChild(currEvolutionFactor);
+                ais[currIndex].Brain = lastWinners[currIndex % lastWinners.Length].GenerateChild(currEvolutionFactor);
+            }
+            for (int i = currIndex; i < ais.Length; i++)
+            {
+                ais[i].Brain = new Brain(gc.NeuronCount, gc.LayerCount, gc.MemoryNeuronCount);
             }
 
             foreach (AiPlayed ai in ais)

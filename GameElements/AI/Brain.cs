@@ -145,7 +145,7 @@ namespace PongML.GameElements.AI
         {
             for (int i = 0; i < weights.Length; i++)
             {
-                weights[i] += ((float)random.NextDouble() * 2 - 1) * evolutionFactor * weights[i] + 0.01f * evolutionFactor * ((float)random.NextDouble() - 0.5f);
+                weights[i] = ((float)random.NextDouble() * 2) * evolutionFactor * weights[i] + 0.01f * evolutionFactor * ((float)random.NextDouble() - 0.5f);
             }
 
             return weights;
