@@ -94,21 +94,33 @@ namespace PongML.GameElements.AI
         {
             Input input = new Input() { Direction = Direction.None, Intensity = 0 };
 
-            float upValue = outputLayer[0].GetValue();
+            float upValue = outputLayer[0].GetValue();/*
             float downValue = outputLayer[1].GetValue();
             if (upValue >= 0 && upValue > downValue)
             {
-                input.Intensity = upValue;
+                input.Intensity = upValue - downValue;
                 input.Direction = Direction.Up;
             }
             else if (downValue >= 0 && downValue > upValue)
             {
-                input.Intensity = downValue;
+                input.Intensity = downValue - upValue;
+                input.Direction = Direction.Down;
+            }*/
+
+            if (upValue > 1)
+            {
+                input.Intensity = upValue;
+                input.Direction = Direction.Up;
+            }
+            else if (upValue < -1)
+            {
+                input.Intensity = -upValue;
                 input.Direction = Direction.Down;
             }
 
             //Update the memory values
-            for (int i = 2; i < outputLayer.Length; i++) {
+            for (int i = 2; i < outputLayer.Length; i++)
+            {
                 outputLayer[i].GetValue();
             }
 
@@ -120,10 +132,10 @@ namespace PongML.GameElements.AI
             int xModifier = ReverseHorizontal ? -1 : 1;
             xBall.SetValue((game.BallPos.X - game.ArenaHeight / 2) * xModifier);
             yBall.SetValue(game.BallPos.Y - game.ArenaHeight / 2);
-            myPaddle.SetValue(game.Players[PlayerNumber].PaddlePosition - game.ArenaHeight/2);
+            myPaddle.SetValue(game.Players[PlayerNumber].PaddlePosition - game.ArenaHeight / 2);
             theirPaddle.SetValue(game.Players[(PlayerNumber + 1) % 2].PaddlePosition - game.ArenaHeight / 2);
 
-            foreach(var output in outputLayer)
+            foreach (var output in outputLayer)
             {
                 output.Update(updateCount);
             }
@@ -143,12 +155,15 @@ namespace PongML.GameElements.AI
 
         private float[] generateWeights(float[] weights, float evolutionFactor)
         {
+            float[] newWeights = new float[weights.Length];
+
             for (int i = 0; i < weights.Length; i++)
             {
-                weights[i] = ((float)random.NextDouble() * 2) * evolutionFactor * weights[i] + 0.01f * evolutionFactor * ((float)random.NextDouble() - 0.5f);
+                float roll = (float)((random.NextDouble() - 0.5) * (random.NextDouble() - 0.5)) * 4;
+                newWeights[i] = roll * evolutionFactor * weights[i] /*+ 0.01f * evolutionFactor * ((float)random.NextDouble() - 0.5f)*/;
             }
 
-            return weights;
+            return newWeights;
         }
 
         public string ToJson()
@@ -164,7 +179,7 @@ namespace PongML.GameElements.AI
 
         public static Brain FromJson(string json)
         {
-            Brain brain = JsonConvert.DeserializeObject<Brain>(json, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto});
+            Brain brain = JsonConvert.DeserializeObject<Brain>(json, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto });
 
             INeuron[] lastLayer = new INeuron[4 + brain.memories.Length];
 
@@ -180,7 +195,7 @@ namespace PongML.GameElements.AI
 
             for (int i = 0; i < brain.hiddenLayers.Length; i++)
             {
-                for (int j = 0; j< brain.hiddenLayers[i].Length; j++)
+                for (int j = 0; j < brain.hiddenLayers[i].Length; j++)
                 {
                     brain.hiddenLayers[i][j].PreviousNeurons = lastLayer;
                 }
@@ -195,7 +210,7 @@ namespace PongML.GameElements.AI
 
             return brain;
         }
-        
+
         public Brain GenerateChild(float evolutionFactor)
         {
             Brain newBrain = new Brain();

@@ -180,6 +180,8 @@ namespace PongML.SimulationElements
 
         private void newRound()
         {
+            Round++;
+
             lastWinners = ais
                 .OrderByDescending(ai => ai.NetScore)
                 .ThenByDescending(ai => ai.NetMatches)
@@ -188,7 +190,7 @@ namespace PongML.SimulationElements
                 .ToArray();
 
             BestScore = ais.OrderByDescending(ai => ai.NetScore).First().NetScore;
-            if (BestScore > BestRoundScore)
+            if (BestScore > BestRoundScore || BestRound == 0)
             {
                 BestRound = Round;
                 BestRoundScore = BestScore;
@@ -225,7 +227,6 @@ namespace PongML.SimulationElements
             }
 
             doneCount = 0;
-            Round++;
             NewGeneration?.Invoke();
         }
     }
