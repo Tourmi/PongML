@@ -125,7 +125,7 @@ namespace PongML
         {
             Dispatcher.Invoke(() =>
             {
-                TextBlock_Round.Text = $"Generation: {sim.Round}\nBest score: {sim.BestScore}";
+                TextBlock_Round.Text = $"Generation: {sim.Round}\nBest score: {sim.BestScore}\nBest round: {sim.BestRound}\nBest round score: {sim.BestRoundScore}";
 
                 if(stopped)
                 {

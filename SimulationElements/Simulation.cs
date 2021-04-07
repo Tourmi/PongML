@@ -39,6 +39,8 @@ namespace PongML.SimulationElements
         public event Action NewGeneration;
         public int Round { get; private set; }
         public int BestScore { get; private set; }
+        public int BestRound { get; private set; }
+        public int BestRoundScore { get; private set; }
 
         public Simulation(Models.GameConfiguration gc)
         {
@@ -186,6 +188,11 @@ namespace PongML.SimulationElements
                 .ToArray();
 
             BestScore = ais.OrderByDescending(ai => ai.NetScore).First().NetScore;
+            if (BestScore > BestRoundScore)
+            {
+                BestRound = Round;
+                BestRoundScore = BestScore;
+            }
 
             foreach (Brain winner in lastWinners)
             {
