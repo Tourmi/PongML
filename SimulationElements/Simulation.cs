@@ -38,9 +38,12 @@ namespace PongML.SimulationElements
         public bool Ready { get; private set; }
         public event Action NewGeneration;
         public int Round { get; private set; }
+        public int CurrBestScore { get; private set; }
         public int BestScore { get; private set; }
-        public int BestRound { get; private set; }
-        public int BestRoundScore { get; private set; }
+        public int BestScoreRound { get; private set; }
+        public int AverageScore { get; private set; }
+        public int BestAverageScore { get; private set; }
+        public int BestAverageScoreRound { get; private set; }
 
         public Simulation(Models.GameConfiguration gc)
         {
@@ -189,11 +192,17 @@ namespace PongML.SimulationElements
                 .Select(ai => ai.Brain)
                 .ToArray();
 
-            BestScore = ais.OrderByDescending(ai => ai.NetScore).First().NetScore;
-            if (BestScore > BestRoundScore || BestRound == 0)
+            CurrBestScore = ais.OrderByDescending(ai => ai.NetScore).First().NetScore;
+            AverageScore = (int)ais.Average(ai => ai.NetScore);
+            if (CurrBestScore > BestScore || BestScoreRound == 0)
             {
-                BestRound = Round;
-                BestRoundScore = BestScore;
+                BestScoreRound = Round;
+                BestScore = CurrBestScore;
+            }
+            if (AverageScore > BestAverageScore || BestAverageScoreRound == 0)
+            {
+                BestAverageScoreRound = Round;
+                BestAverageScore = AverageScore;
             }
 
             foreach (Brain winner in lastWinners)
