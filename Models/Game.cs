@@ -47,6 +47,10 @@ namespace PongML.Models
             if (player2 is IArtificialIntelligence ai2)
             {
                 ais.Add(ai2);
+                if (ai2 is Brain brain)
+                {
+                    brain.ReverseHorizontal = false;
+                }
             }
 
             BallSize = 16;
