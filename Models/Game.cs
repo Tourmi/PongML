@@ -42,6 +42,7 @@ namespace PongML.Models
                 if (ai1 is Brain brain)
                 {
                     brain.ReverseHorizontal = true;
+                    brain.PlayerNumber = 0;
                 }
             }
             if (player2 is IArtificialIntelligence ai2)
@@ -50,6 +51,7 @@ namespace PongML.Models
                 if (ai2 is Brain brain)
                 {
                     brain.ReverseHorizontal = false;
+                    brain.PlayerNumber = 1;
                 }
             }
 
