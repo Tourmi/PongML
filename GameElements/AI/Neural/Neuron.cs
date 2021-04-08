@@ -22,10 +22,8 @@ namespace PongML.GameElements.AI.Neural
         [JsonIgnore]
         public float[] Weights => previousWeights;
 
-        public float GetValue()
-        {
-            return cachedValue;
-        }
+        public float GetValue() => cachedValue;
+        
 
         public void Update(int frame)
         {

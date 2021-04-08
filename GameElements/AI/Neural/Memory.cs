@@ -16,7 +16,7 @@ namespace PongML.GameElements.AI.Neural
 
         public float GetValue() => currValue;
 
-        public void SetValue(float value) => currValue = value;
+        public void SetValue(float value) => throw new System.InvalidOperationException();
 
         public void Update(int frame)
         {

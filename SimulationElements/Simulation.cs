@@ -216,7 +216,7 @@ namespace PongML.SimulationElements
             int currIndex;
             for (currIndex = lastWinners.Length; currIndex < ais.Length && currIndex < gc.MaximumChildrenPerAi * gc.KeepBestAIs; currIndex++)
             {
-                const int slowDownFactor = 1000;
+                const int slowDownFactor = 100;
                 float currEvolutionFactor = ((gc.BaseEvolutionFactor / 100.0f) * slowDownFactor) / (slowDownFactor + Round);
                 ais[currIndex].Brain = lastWinners[currIndex % lastWinners.Length].GenerateChild(currEvolutionFactor);
             }
