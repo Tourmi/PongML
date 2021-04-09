@@ -88,7 +88,7 @@ namespace PongML.SimulationElements
                 }
 
                 newRound();
-                //TODO: Save best AI to file
+
                 if (gc.SaveBestAIAfterEveryRound)
                 {
                     Directory.CreateDirectory("AISaves");
@@ -98,7 +98,7 @@ namespace PongML.SimulationElements
                     }
                 }
             }
-            //TODO : Save best AI to file
+
             if (gc.SaveBestAIAfterStoppingSim)
             {
                 Directory.CreateDirectory("AISaves");
