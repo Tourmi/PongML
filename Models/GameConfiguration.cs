@@ -7,33 +7,78 @@ using System.Threading.Tasks;
 
 namespace PongML.Models
 {
+    /// <summary>
+    /// Configuration class used by the program
+    /// </summary>
     public class GameConfiguration
     {
 
         /*
          * Neural Network
          */
+
+        /// <summary>
+        /// Amount of neurons in each hidden layers
+        /// </summary>
         public int NeuronCount { get; set; }
+        /// <summary>
+        /// Amount of hidden layers in the neural network
+        /// </summary>
         public int LayerCount { get; set; }
+        /// <summary>
+        /// Amount of memory neurons in the neural network
+        /// </summary>
         public int MemoryNeuronCount { get; set; }
+        /// <summary>
+        /// The starting evolution factor of the training. Should be a number between 0 and 100
+        /// </summary>
         public int BaseEvolutionFactor { get; set; }
 
         /*
          * Training
          */
+
+        /// <summary>
+        /// Number of AIs to train per round.
+        /// Do note that the time to train is N^2, since every AI will fight every other AI.
+        /// </summary>
         public uint NumberOfAIs { get; set; }
+        /// <summary>
+        /// The amount of AIs to keep every round.
+        /// </summary>
         public uint KeepBestAIs { get; set; }
+        /// <summary>
+        /// The amount of children to generate per kept AI.
+        /// </summary>
         public uint MaximumChildrenPerAi { get; set; }
-        //Game length in frames
+        /// <summary>
+        /// The game length in frames (1/60th of a second)
+        /// </summary>
         public int GameLength { get; set; }
+        /// <summary>
+        /// Whether or not we should save the best AIs of a round to a file
+        /// </summary>
         public bool SaveBestAIAfterEveryRound { get; set; }
+        /// <summary>
+        /// Whether or not we should save the best AIs of the whole training to a file
+        /// </summary>
         public bool SaveBestAIAfterStoppingSim { get; set; }
 
         /*
          * Game Settings
          */
+
+        /// <summary>
+        /// The starting ball speed
+        /// </summary>
         public float InitialBallSpeed { get; set; }
+        /// <summary>
+        /// Amount by which the ball's speed is increased every bounce
+        /// </summary>
         public float BallSpeedIncrement { get; set; }
+        /// <summary>
+        /// Maximum speed of the players' paddle
+        /// </summary>
         public float PaddleSpeed { get; set; }
 
         public GameConfiguration()

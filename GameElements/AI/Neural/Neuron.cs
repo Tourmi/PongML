@@ -2,6 +2,9 @@
 
 namespace PongML.GameElements.AI.Neural
 {
+    /// <summary>
+    /// This class represents a single standard neuron
+    /// </summary>
     class Neuron : INeuron
     {
         [JsonIgnore]

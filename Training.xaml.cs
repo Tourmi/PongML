@@ -129,9 +129,7 @@ namespace PongML
                 $"Current best score: {sim.CurrBestScore}\n" +
                 $"Best round: {sim.BestScoreRound}\n" +
                 $"Best round score: {sim.BestScore}\n" +
-                $"Average score: {sim.AverageScore}\n" +
-                $"Best average score: {sim.BestAverageScore}\n" +
-                $"Best average score round: {sim.BestAverageScoreRound}";
+                $"Average score: {sim.AverageScore}";
 
                 if(stopped)
                 {

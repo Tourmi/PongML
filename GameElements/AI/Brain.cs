@@ -9,27 +9,64 @@ using System.Threading.Tasks;
 
 namespace PongML.GameElements.AI
 {
+    /// <summary>
+    /// This class represents a single Neural network
+    /// </summary>
     class Brain : IArtificialIntelligence
     {
+        /// <summary>
+        /// The player index of this AI
+        /// </summary>
         [JsonIgnore]
         public int PlayerNumber { get; set; }
+        /// <summary>
+        /// Whether or not to mirror the horizontal axis when updating perceptrons
+        /// </summary>
         [JsonIgnore]
         public bool ReverseHorizontal { private get; set; }
         private readonly Random random;
 
+        /// <summary>
+        /// X position of the ball input
+        /// </summary>
         private readonly IPerceptron xBall;
+        /// <summary>
+        /// Y position of the ball input
+        /// </summary>
         private readonly IPerceptron yBall;
+        /// <summary>
+        /// This network's paddle input
+        /// </summary>
         private readonly IPerceptron myPaddle;
+        /// <summary>
+        /// The enemy's paddle input
+        /// </summary>
         private readonly IPerceptron theirPaddle;
+        /// <summary>
+        /// The memory neurons that's used as extra inputs
+        /// </summary>
         [JsonProperty]
         private Memory[] memories;
 
+        /// <summary>
+        /// The hidden layers of the neural network
+        /// </summary>
         [JsonProperty]
         private INeuron[][] hiddenLayers;
+        /// <summary>
+        /// The output layer of the neural network.
+        /// Has two outputs, plus one more per memory neuron
+        /// </summary>
         [JsonProperty]
         private INeuron[] outputLayer;
+        /// <summary>
+        /// Position of the paddle
+        /// </summary>
         [JsonIgnore]
         public float PaddlePosition { get; set; }
+        /// <summary>
+        /// The current score of the AI
+        /// </summary>
         [JsonIgnore]
         public int Score { get; set; }
 
@@ -89,7 +126,9 @@ namespace PongML.GameElements.AI
             }
         }
 
-
+        /// <summary>
+        /// Returns the current input the AI is picking
+        /// </summary>
         public Input GetInput()
         {
             Input input = new Input() { Direction = Direction.None, Intensity = 0 };
@@ -107,15 +146,13 @@ namespace PongML.GameElements.AI
                 input.Direction = Direction.Down;
             }
 
-            //Update the memory values
-            for (int i = 2; i < outputLayer.Length; i++)
-            {
-                outputLayer[i].GetValue();
-            }
-
             return input;
         }
 
+        /// <summary>
+        /// Updates the value of the perceptrons, then updates the neural network's neurons recursively
+        /// </summary>
+        /// <param name="game">The current game of the AI</param>
         public void Update(Game game)
         {
             int xModifier = ReverseHorizontal ? -1 : 1;
@@ -132,6 +169,11 @@ namespace PongML.GameElements.AI
             updateCount++;
         }
 
+        /// <summary>
+        /// Generates an array of weights of size <paramref name="count"/>
+        /// </summary>
+        /// <param name="count">The size of the weights array to return</param>
+        /// <returns>The randomly generated weights</returns>
         private float[] generateWeights(int count)
         {
             float[] weights = new float[count];
@@ -142,19 +184,31 @@ namespace PongML.GameElements.AI
             return weights;
         }
 
+        /// <summary>
+        /// Generates a new array of weights based on the given <paramref name="weights"/>.
+        /// The <paramref name="evolutionFactor"/> should be a number superior to zero, which determines how much the weights may change
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="evolutionFactor"></param>
+        /// <returns></returns>
         private float[] generateWeights(float[] weights, float evolutionFactor)
         {
             float[] newWeights = new float[weights.Length];
 
             for (int i = 0; i < weights.Length; i++)
             {
+                //The roll is zero-centered, and has a value between -1 and 1.
                 float roll = (float)((random.NextDouble() - 0.5) * (random.NextDouble() - 0.5)) * 4;
-                newWeights[i] = roll * evolutionFactor * weights[i] /*+ 0.01f * evolutionFactor * ((float)random.NextDouble() - 0.5f)*/;
+                newWeights[i] += roll * evolutionFactor * weights[i];
             }
 
             return newWeights;
         }
 
+        /// <summary>
+        /// Saves the weights, and memory neurons to a Json string
+        /// </summary>
+        /// <returns></returns>
         public string ToJson()
         {
             var jsonSettings = new JsonSerializerSettings()
@@ -166,6 +220,11 @@ namespace PongML.GameElements.AI
             return JsonConvert.SerializeObject(this, jsonSettings);
         }
 
+        /// <summary>
+        /// Returns a new <see cref="Brain"/> object from the given Json string
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
         public static Brain FromJson(string json)
         {
             Brain brain = JsonConvert.DeserializeObject<Brain>(json, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto });
@@ -200,6 +259,11 @@ namespace PongML.GameElements.AI
             return brain;
         }
 
+        /// <summary>
+        /// Generates a "child" of this Neural network, by copying this Brain's weights, and slightly modifying them in the child.
+        /// </summary>
+        /// <param name="evolutionFactor"></param>
+        /// <returns></returns>
         public Brain GenerateChild(float evolutionFactor)
         {
             Brain newBrain = new Brain();

@@ -8,6 +8,9 @@ using System.Windows.Input;
 
 namespace PongML.GameElements
 {
+    /// <summary>
+    /// This class is used whenever we want a human player to play
+    /// </summary>
     class HumanPlayer : IPlayer
     {
         private readonly Key upKey;
@@ -22,6 +25,10 @@ namespace PongML.GameElements
         public float PaddlePosition { get; set; }
         public int Score { get; set; }
 
+        /// <summary>
+        /// Returns the current input being held by the player
+        /// </summary>
+        /// <returns></returns>
         public Input GetInput()
         {
             Input input = new Input() { Direction = Direction.None, Intensity = 1 };

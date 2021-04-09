@@ -7,11 +7,23 @@ using System.Threading.Tasks;
 
 namespace PongML.GameElements.AI
 {
+    /// <summary>
+    /// This is a test AI that simply picks random moves
+    /// </summary>
     class RandomAI : IArtificialIntelligence
     {
         private readonly Random random;
+        /// <summary>
+        /// Time to hold the input for
+        /// </summary>
         private int holdUntil;
+        /// <summary>
+        /// The current frame of the game
+        /// </summary>
         private int currentFrame;
+        /// <summary>
+        /// The current input being held
+        /// </summary>
         private Input currentInput;
 
         public RandomAI()
@@ -23,6 +35,10 @@ namespace PongML.GameElements.AI
         public float PaddlePosition { get; set; }
         public int Score { get; set; }
 
+        /// <summary>
+        /// Returns a random input, or the currently held input
+        /// </summary>
+        /// <returns></returns>
         public Input GetInput()
         {
             if (currentFrame >= holdUntil)
@@ -51,6 +67,10 @@ namespace PongML.GameElements.AI
             return currentInput;
         }
 
+        /// <summary>
+        /// Updates the current frame
+        /// </summary>
+        /// <param name="game"></param>
         public void Update(Game game)
         {
             currentFrame = game.CurrentFrame;

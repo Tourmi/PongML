@@ -10,26 +10,76 @@ using System.Windows.Input;
 
 namespace PongML.Models
 {
+    /// <summary>
+    /// Class representing a single game of Pong
+    /// </summary>
     public class Game
     {
+        /// <summary>
+        /// The current frame of the game
+        /// </summary>
         public int CurrentFrame { get; set; }
+        /// <summary>
+        /// Position of the ball
+        /// </summary>
         public Vector2 BallPos { get; set; }
+        /// <summary>
+        /// Direction the ball is going in
+        /// </summary>
         public Vector2 BallDirection { get; set; }
+        /// <summary>
+        /// Current speed of the ball
+        /// </summary>
         public float BallSpeed { get; set; }
+        /// <summary>
+        /// The speed at which the ball spawns at
+        /// </summary>
         public float InitialBallSpeed { get; set; }
+        /// <summary>
+        /// The speed that the ball gains whenever it is bounced back
+        /// </summary>
         public float BallSpeedIncrement { get; set; }
+        /// <summary>
+        /// The size of the ball
+        /// </summary>
         public float BallSize { get; set; }
+        /// <summary>
+        /// The width of the arena
+        /// </summary>
         public int ArenaWidth { get; set; }
+        /// <summary>
+        /// The height of the arena
+        /// </summary>
         public int ArenaHeight { get; set; }
+        /// <summary>
+        /// Size of a single player's paddle
+        /// </summary>
         public int PaddleSize { get; set; }
+        /// <summary>
+        /// Maximum speed at which the paddle may go
+        /// </summary>
         public float PaddleSpeed { get; set; }
+        /// <summary>
+        /// This game's players. Will always be an array with two elements
+        /// </summary>
         public readonly IPlayer[] Players;
 
+        /// <summary>
+        /// This game's AIs. Can have between 0 to 2 of them
+        /// </summary>
         private readonly List<IArtificialIntelligence> ais;
         private readonly Random random;
 
+        /// <summary>
+        /// Default game of a human player versus a random AI
+        /// </summary>
         public Game() : this(new HumanPlayer(Key.W, Key.S), new RandomAI()) { }
 
+        /// <summary>
+        /// New game with the two given players and a default configuration
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         public Game(IPlayer player1, IPlayer player2)
         {
             ais = new List<IArtificialIntelligence>();
@@ -71,6 +121,12 @@ namespace PongML.Models
             BallSpeedIncrement = 1;
         }
 
+        /// <summary>
+        /// New game with the given configuration and players
+        /// </summary>
+        /// <param name="gc"></param>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         public Game(GameConfiguration gc, IPlayer player1, IPlayer player2) : this(player1, player2)
         {
             BallSpeed = gc.InitialBallSpeed;
@@ -79,6 +135,9 @@ namespace PongML.Models
             InitialBallSpeed = gc.InitialBallSpeed;
         }
 
+        /// <summary>
+        /// Updates the whole game by one frame
+        /// </summary>
         public void Update()
         {
             foreach (var ai in ais)
@@ -105,10 +164,11 @@ namespace PongML.Models
                 }
 
                 player.PaddlePosition += move;
+                //If we moved out of the lower bounds, cap the position on the lower bound
                 if (player.PaddlePosition + (PaddleSize / 2) > ArenaHeight)
                 {
                     player.PaddlePosition = ArenaHeight - PaddleSize / 2;
-                }
+                } //If we moved out of the upper bounds, cap the position on the upper bound
                 else if (player.PaddlePosition - (PaddleSize / 2) < 0)
                 {
                     player.PaddlePosition = 0 + PaddleSize / 2;
@@ -116,22 +176,24 @@ namespace PongML.Models
             }
 
             BallPos += BallDirection * BallSpeed;
+            //If the ball moved out the lower bound, cap it
             if (BallPos.Y + (BallSize / 2) > ArenaHeight)
             {
                 BallPos = new Vector2(BallPos.X, ArenaHeight - BallSize / 2);
                 BallDirection = new Vector2(BallDirection.X, -BallDirection.Y);
-            }
+            } //If the ball moved out the upper bound, cap it
             else if (BallPos.Y - (BallSize / 2) < 0)
             {
                 BallPos = new Vector2(BallPos.X, 0 + BallSize / 2);
                 BallDirection = new Vector2(BallDirection.X, -BallDirection.Y);
             }
 
+            //If the ball moved out the right bounds, cap it and process if it should bounce or respawn
             if (BallPos.X + (BallSize / 2) > ArenaWidth)
             {
                 BallPos = new Vector2(ArenaWidth - (BallSize / 2), BallPos.Y);
                 ballExitedSide(1);
-            }
+            } //If the ball moved out the left bounds, cap it and process if it should bounce or respawn
             else if (BallPos.X - (BallSize / 2) < 0)
             {
                 BallPos = new Vector2(0 + (BallSize / 2), BallPos.Y);
@@ -149,6 +211,7 @@ namespace PongML.Models
             float maxBallPos = BallPos.Y + BallSize / 2;
             float minPaddlePos = Players[playerIndex].PaddlePosition - PaddleSize / 2;
             float maxPaddlePos = Players[playerIndex].PaddlePosition + PaddleSize / 2;
+            //Has the ball hit the player's paddle?
             if (maxBallPos >= minPaddlePos && minBallPos <= maxPaddlePos)
             {
                 //The ball bounces back

@@ -4,8 +4,14 @@
     {
         private float value;
 
+        /// <summary>
+        /// Since the perceptron is on the first layer of the neural network, it does not have previous neurons
+        /// </summary>
         public INeuron[] PreviousNeurons { set => throw new System.InvalidOperationException(); }
 
+        /// <summary>
+        /// Since the perceptron is on the first layer of the neural network, it does not have previous neurons
+        /// </summary>
         public float[] Weights => throw new System.InvalidOperationException();
 
         public float GetValue() => value;
